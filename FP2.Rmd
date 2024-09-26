@@ -1,0 +1,193 @@
+---
+title: "FP2"
+author: "Jacob Posner"
+output:
+  html_document:
+    theme: null
+    highlight: null
+  pdf_document: default
+---
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(usmap)
+library(sf)
+library(ggrepel)
+library(tidygeocoder)
+library(ggspatial)
+library(ggpubr)
+```
+
+```{r}
+#Data set with more variables
+people<-read.csv("1651277648862_healthinsurance.csv")
+#less variables
+insurance<-read.csv("insurance.csv")
+```
+
+```{r}
+city_data_geo2 <- people %>%
+  mutate(city = gsub("([a-z])([A-Z])", "\\1 \\2", city)) %>%  # Add space between lowercase and uppercase letters
+  mutate(city = case_when(
+    city == "San Deigo" ~ "San Diego",
+    city == "Escabana" ~ "Escanaba",
+    city == "Phildelphia" ~ "Philadelphia",
+    city == "Brimingham" ~ "Birmingham",
+    TRUE ~ city # Keep other cities unchanged
+  )) %>%
+  geocode(city, method = "osm", lat = lat, long = lon, full_results = TRUE)  # Geocode cities and get full results
+```
+
+
+```{r}
+# Creating the tibble with city, state name, and state code
+city_state2 <- tibble(
+  city = c(
+    "Atlanta", "Atlantic City", "Bakersfield", "Baltimore", "Bloomington", 
+    "Boston", "Birmingham", "Brookings", "Buffalo", "Cambridge", 
+    "Canton", "Carlsbad", "Charleston", "Charlotte", "Chicago", 
+    "Cincinnati", "Cleveland", "Columbia", "Columbus", "Denver", 
+    "Escanaba", "Eureka", "Falls City", "Fargo", "Florence", 
+    "Fresno", "Georgia", "Grand Forks", "Harrisburg", "Hartford", 
+    "Houston", "Huntsville", "Indianapolis", "Iowa City", "Jefferson City", 
+    "Kansas City", "Kingman", "Kingsport", "Knoxville", "Las Vegas", 
+    "Lincoln", "Los Angeles", "Louisville", "Lovelock", "Macon", 
+    "Mandan", "Marshall", "Memphis", "Mexicali", "Miami", 
+    "Minneapolis", "Minot", "Montrose", "Nashville", "New Orleans", 
+    "New York", "Newport", "Oceanside", "Oklahoma", "Orlando", 
+    "Oxnard", "Panama City", "Phoenix", "Philadelphia", "Pittsburg", 
+    "Portland", "Prescott", "Providence", "Raleigh", "Reno", 
+    "Rochester", "Salina", "San Diego", "San Francisco", "San Jose", 
+    "San Luis", "Santa Fe", "Santa Rosa", "Silver City", "Springfield", 
+    "Stamford", "Syracuse", "Tampa", "Trenton", "Tucson", 
+    "Warwick", "Washington DC", "Waterloo", "Worcester", "York", 
+    "Youngstown"
+  ),
+  state_name = c(
+    "Georgia", "New Jersey", "California", "Maryland", "Indiana", 
+    "Massachusetts", "Alabama", "South Dakota", "New York", "International", 
+    "Ohio", "California", "South Carolina", "North Carolina", "Illinois", 
+    "Ohio", "Ohio", "South Carolina", "Ohio", "Colorado", 
+    "Michigan", "California", "Nebraska", "North Dakota", "South Carolina", 
+    "California", "International", "North Dakota", "Pennsylvania", "Connecticut", 
+    "Texas", "Alabama", "Indiana", "Iowa", "Missouri", 
+    "Missouri", "Arizona", "Tennessee", "Tennessee", "Nevada", 
+    "Nebraska", "California", "Kentucky", "Nevada", "Georgia", 
+    "North Dakota", "Texas", "Tennessee", "International", "Florida", 
+    "Minnesota", "North Dakota", "Colorado", "Tennessee", "Louisiana", 
+    "New York", "Rhode Island", "California", "Oklahoma", "Florida", 
+    "California", "Florida", "Arizona", "Pennsylvania", "Kansas", 
+    "Oregon", "Arizona", "Rhode Island", "North Carolina", "Nevada", 
+    "New York", "Kansas", "California", "California", "California", 
+    "Mexico", "New Mexico", "California", "New Mexico", "Missouri", 
+    "Connecticut", "New York", "Florida", "New Jersey", "Arizona", 
+    "Rhode Island", "District of Columbia", "Iowa", "Massachusetts", "Pennsylvania", 
+    "Ohio"
+  ),
+  state_code = c(
+    "GA", "NJ", "CA", "MD", "IN", 
+    "MA", "AL", "SD", "NY", "International", 
+    "OH", "CA", "SC", "NC", "IL", 
+    "OH", "OH", "SC", "OH", "CO", 
+    "MI", "CA", "NE", "ND", "SC", 
+    "CA", "International", "ND", "PA", "CT", 
+    "TX", "AL", "IN", "IA", "MO", 
+    "MO", "AZ", "TN", "TN", "NV", 
+    "NE", "CA", "KY", "NV", "GA", 
+    "ND", "TX", "TN", "International", "FL", 
+    "MN", "ND", "CO", "TN", "LA", 
+    "NY", "RI", "CA", "OK", "FL", 
+    "CA", "FL", "AZ", "PA", "KS", 
+    "OR", "AZ", "RI", "NC", "NV", 
+    "NY", "KS", "CA", "CA", "CA", 
+    "International", "NM", "CA", "NM", "MO", 
+    "CT", "NY", "FL", "NJ", "AZ", 
+    "RI", "DC", "IA", "MA", "PA", 
+    "OH"
+  )
+)
+
+city_data_geo2<-city_data_geo2 %>% 
+  left_join(city_state2, by = "city") %>% 
+  filter(state_name != "International" )
+```
+
+
+```{r}
+state_claims <-city_data_geo2 %>% 
+  filter(!is.na(state_name)) %>% 
+  group_by(state_name) %>% 
+  summarize(mean_claim_price = mean(claim, na.rm = TRUE)) 
+
+city_data_geo2<-city_data_geo2 %>% 
+  left_join(state_claims, by = "state_name") %>% 
+  mutate(state = state.abb[match(state_name, state.name)]) %>% 
+  mutate(lon = ifelse(lon < 0, -lon, lon))
+
+usmap_plot <- plot_usmap(data = city_data_geo2, values = "mean_claim_price", color = "white") +
+  scale_fill_continuous(low = "yellow", high = "red", name = "Avg Claim Price", label = scales::dollar_format()) + 
+  theme_classic()+
+  theme(legend.position = "right") +
+  labs(title = "Average Insurance Claim Price by State") + 
+  annotation_scale(location = "bl",  
+                   width_hint = 0.3,  
+                   text_cex = 0.8, 
+                   unit_category = "imperial",  
+                   unit = "mi")+
+  annotation_north_arrow(location = "tl",  
+                         which_north = "true",  
+                         style = north_arrow_fancy_orienteering)
+
+
+
+# city_location<-city_data_geo2 %>% 
+#   select(city, lat, lon)
+# 
+# city_sf <- st_as_sf(city_location, coords = c("lat", "lon"), crs = 4326)
+# city_sf <- st_transform(city_sf, st_crs(usmap))
+# 
+# # Add cities with their labels and points
+# city_map <- usmap_plot +
+#   geom_point(data = city_data_geo2, aes(x = lon, y = lat), size = 2) +
+#   geom_text(data = city_data_geo2, aes(x = lon, y = lat, label = city), size = 3, vjust = 1)
+
+
+```
+
+```{r}
+claim_dependants<-city_data_geo2 %>% 
+  group_by(state_code) %>% 
+  summarise(avg_depentants = mean(no_of_dependents), avg_claim = mean(mean_claim_price)) %>% 
+  filter(state_code != "International") %>%
+  mutate(avg_claim = avg_claim/1000) %>% 
+  ggplot(aes(x = avg_depentants, y = avg_claim))+
+  geom_text(aes(label = state_code))+
+  theme_minimal()+
+  labs(y = "Average Insurance Claim ($1000)", x = "Average # of Dependants per Person", title = "Dependants per Person vs. Average Insurance Claim")+
+  geom_smooth(se=FALSE)
+```
+
+```{r, fig.height=10, fig.width=10}
+combined<-ggarrange(
+  usmap_plot, claim_dependants,             
+  ncol = 1, nrow = 2, 
+  heights = c(2, 2), 
+  widths = c(2, 2)# Number of columns and rows
+  #labels = c("A", "B",),       # Add labels to the plots
+  #common.legend = TRUE,            # If you want to have a common legend
+  #legend = "right"                 # Position of the legend ("top", "bottom", "left", "right")
+)
+```
+
+```{r, fig.height=10, fig.width=10, fig.alt="Full Image"}
+combined
+```
+
+# Image Description
+
+> I decided to explore several variables in my data set: insurance claim price, # of dependants, and state. My data consisted of cities, so I had to manually code the states into the data set. Notice that some states on the map are gray. That is because there were no cities in the data set that were in that state. The visual, "Average Insurance Claim Price by State," portrays the average insurance claim price in a given state. The scale ranges from about $10,000 to just above $15,000. The color yellow represents lower values while the color red represents higher values. Illinois, Indiana, and Arizona have the highest claim averages while Minnesota has the lowest. 
+
+> The second part of my image explores the average number of dependants per person and the average claim. We can see that there is a small amount of correlation between the two. Aside from Maryland, there are no real outliers and the plot is pretty random. There are 7 states just above 1.2 dependants and they all have different average claim values. We can probably attribute this to a difference in healthcare in each state and can futher explore this with more analysis.
