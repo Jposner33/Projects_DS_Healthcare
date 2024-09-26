@@ -23,9 +23,8 @@ library(ggpubr)
 
 ```{r}
 #Data set with more variables
-people<-read.csv("1651277648862_healthinsurance.csv")
-#less variables
-insurance<-read.csv("insurance.csv")
+people<-read.csv("../1651277648862_healthinsurance.csv")
+
 ```
 
 ```{r}
@@ -182,7 +181,7 @@ combined<-ggarrange(
 )
 ```
 
-```{r, fig.height=10, fig.width=10, fig.alt="Full Image"}
+```{r, fig.height=10, fig.width=10, fig.alt="Dependants per Person vs. Average Insurance Claim"}
 combined
 ```
 
