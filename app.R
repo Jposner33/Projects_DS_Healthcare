@@ -9,7 +9,7 @@ library(tibble)
 library(stringr)
 library(scales)
 sahie_2010 <- read_csv("Data/sahie_2010.csv", skip = 79)%>% filter(state_name == "Minnesota")
-SAHIE2011 <- read_csv("Data/sahie_2011.csv", skip = 79)%>% filter(state_name == "Minnesota")
+sahie_2011 <- read_csv("Data/sahie_2011.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2012 <- read_csv("Data/sahie_2012.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2013 <- read_csv("Data/sahie_2013.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2014 <- read_csv("Data/sahie_2014.csv", skip = 79)%>% filter(state_name == "Minnesota")
@@ -78,17 +78,12 @@ incomeCat2 <- enframe(incomeCat) %>%
   deframe
 
 variables <- list(
-  "Number in demographic group for <income category>" = "NIPR",
-  "Number uninsured" = "NUI",
-  "Number insured" = "NIC",
   "Percent uninsured in demographic group for <income category>" = "PCTUI",
   "Percent insured in demographic group for <income category>" = "PCTIC",
   "Percent uninsured in demographic group for all income levels" = "PCTELIG",
   "Percent insured in demographic group for all income levels" = "PCTLIIC"
 )
-variablesMinusWords <- list("Number in demographic group for " = "NIPR",
-                          "Number uninsured" = "NUI",
-                          "Number insured" = "NIC",
+variablesMinusWords <- list(
                           "Percent uninsured in demographic group for" = "PCTUI",
                           "Percent insured in demographic group for" = "PCTIC",
                           "Percent uninsured in demographic group for all income levels" = "PCTELIG",
