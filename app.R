@@ -8,6 +8,7 @@ library(ggpubr)
 library(tibble)
 library(stringr)
 library(scales)
+library(plotly)
 sahie_2010 <- read_csv("Data/sahie_2010.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2011 <- read_csv("Data/sahie_2011.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2012 <- read_csv("Data/sahie_2012.csv", skip = 79)%>% filter(state_name == "Minnesota")
@@ -54,16 +55,16 @@ sexCat <- list(
   "Female" = "2"
 )
 
-raceCat <- list(
-  "All races" = "0",
-  "White alone, not Hispanic or Latino" = "1",
-  "Black or African American alone, not Hispanic or Latino" = "2",
-  "Hispanic or Latino (any race)" = "3",
-  "American Indian and Alaska Native alone, not Hispanic or Latino" = "4",
-  "Asian alone, not Hispanic or Latino" = "5",
-  "Native Hawaiian and Other Pacific Islander alone, not Hispanic or Latino" = "6",
-  "Two or More Races, not Hispanic or Latino" = "7"
-)
+# raceCat <- list(
+#   "All races" = "0",
+#   "White alone, not Hispanic or Latino" = "1",
+#   "Black or African American alone, not Hispanic or Latino" = "2",
+#   "Hispanic or Latino (any race)" = "3",
+#   "American Indian and Alaska Native alone, not Hispanic or Latino" = "4",
+#   "Asian alone, not Hispanic or Latino" = "5",
+#   "Native Hawaiian and Other Pacific Islander alone, not Hispanic or Latino" = "6",
+#   "Two or More Races, not Hispanic or Latino" = "7"
+# )
 
 incomeCat <- list(
   "All income levels" = "0",
@@ -71,7 +72,7 @@ incomeCat <- list(
   "At or below 250% of poverty" = "2",
   "At or below 138% of poverty" = "3",
   "At or below 400% of poverty" = "4",
-  "Between 138% - 400% of poverty" = "5"
+  "Between 138% - 400% of poverty (Not collected until 2012)" = "5"
 )
 incomeCat2 <- enframe(incomeCat) %>% 
   select(2:1) %>% 
@@ -124,10 +125,6 @@ ui <- fluidPage(
                   label = "Choose a sex category:",
                   choices = sexCat
       ),
-      selectInput(inputId = "raceCat",
-                  label = "Choose a race category:",
-                  choices = raceCat
-      ),
       helpText("Choose race category that you want to analyze"),
       selectInput(inputId = "incomeCat",
                   label = "Choose an income category:",
@@ -142,9 +139,12 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("map_before_aca"),
-      plotOutput("map_after_aca")
+      fluidRow(
+        column(6, plotlyOutput("map_before_aca")),
+        column(6, plotlyOutput("map_after_aca"))
+      )
     )
+    
   )
 )
 
@@ -153,7 +153,7 @@ server <- function(input, output){
   
   
   
-  output$map_before_aca <- renderPlot({
+  output$map_before_aca <- renderPlotly({
     # Dynamically fetch the dataframe for the selected year
     before_aca <- get(input$year_before_ACA) %>%
       filter(state_name == "Minnesota") %>%
@@ -166,7 +166,8 @@ server <- function(input, output){
       mutate(PCTLIIC = as.numeric(PCTLIIC)) %>% 
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
-      filter(racecat == input$raceCat) %>%
+      filter(geocat == 50) %>% 
+      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Dynamically fetch the after_aca dataframe to calculate shared range
@@ -181,7 +182,8 @@ server <- function(input, output){
       mutate(PCTLIIC = as.numeric(PCTLIIC)) %>% 
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
-      filter(racecat == input$raceCat) %>%
+      filter(geocat == 50) %>% 
+      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Compute shared range for consistent legend
@@ -226,22 +228,26 @@ server <- function(input, output){
     #     
     # }
     if(stringr::str_detect(input$variables, "for", negate = T)){
-      ggplot(data = before_aca) +
-        geom_sf(aes_string(fill = input$variables), crs = 26915) +
+      p <- ggplot(data = before_aca) +
+        geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
         labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
-        labs(fill = "Percent or Total")
+        labs(fill = "%") +
+        theme(legend.position = "none")
+      ggplotly(p)
     }
     else{
-      ggplot(data = before_aca) +
-        geom_sf(aes_string(fill = input$variables), crs = 26915) +
+      p <- ggplot(data = before_aca) +
+        geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
         labs(title = paste(variables2[[input$variables]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
-        labs(fill = "Percent or Total")
+        labs(fill = "%") +
+        theme(legend.position = "none")
+      ggplotly(p)
     }
   })
   
-  output$map_after_aca <- renderPlot({
+  output$map_after_aca <- renderPlotly({
     # Dynamically fetch the dataframe for the selected year
     after_aca <- get(input$year_after_ACA) %>%
       filter(state_name == "Minnesota") %>%
@@ -254,7 +260,8 @@ server <- function(input, output){
       mutate(PCTLIIC = as.numeric(PCTLIIC)) %>% 
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
-      filter(racecat == input$raceCat) %>%
+      filter(geocat == 50) %>% 
+      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Dynamically fetch the before_aca dataframe to calculate shared range
@@ -269,7 +276,8 @@ server <- function(input, output){
       mutate(PCTLIIC = as.numeric(PCTLIIC)) %>% 
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
-      filter(racecat == input$raceCat) %>%
+      filter(geocat == 50) %>% 
+      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Compute shared range for consistent legend
@@ -281,18 +289,20 @@ server <- function(input, output){
     
     # Plot Post-ACA map
     if(str_detect(input$incomeCat, "for", negate = T)) {
-      ggplot(data = after_aca) +
-        geom_sf(aes_string(fill = input$variables), crs = 26915) +
+      p <- ggplot(data = after_aca) +
+        geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
         labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
-        labs(fill = "Percent or Total")
+        labs(fill = "%")
+      ggplotly(p)
     }
     else {
-      ggplot(data = after_aca) +
-        geom_sf(aes_string(fill = input$variables), crs = 26915) +
+      p <- ggplot(data = after_aca) +
+        geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
         labs(title = paste(variables2[[input$variables]],"in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
-        labs(fill = "Percent or Total")
+        labs(fill = "%")
+      ggplotly(p)
     }
 
   })
