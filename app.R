@@ -9,6 +9,7 @@ library(tibble)
 library(stringr)
 library(scales)
 library(plotly)
+library(viridis)
 sahie_2010 <- read_csv("Data/sahie_2010.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2011 <- read_csv("Data/sahie_2011.csv", skip = 79)%>% filter(state_name == "Minnesota")
 sahie_2012 <- read_csv("Data/sahie_2012.csv", skip = 79)%>% filter(state_name == "Minnesota")
@@ -152,7 +153,6 @@ ui <- fluidPage(
 server <- function(input, output){
   
   
-  
   output$map_before_aca <- renderPlotly({
     # Dynamically fetch the dataframe for the selected year
     before_aca <- get(input$year_before_ACA) %>%
@@ -193,58 +193,30 @@ server <- function(input, output){
     before_aca <- mn_counties %>%
       left_join(before_aca, by = c("NAMELSAD" = "county_name"))
     
-    # Plot Pre-ACA map
-
-    
-    
-    
-    # if(stringr::str_detect(input$variables, "for", negate = T) && stringr::str_detect(input$variables, "Percent")){
-    #   ggplot(data = before_aca) +
-    #   geom_sf(aes_string(fill = input$variables), crs = 26915) +
-    #     scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-    #     labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)"), fill ="1%") 
-    #     #labs(fill = "%1")
-    # }
-    # else if (stringr::str_detect(input$variables, "Percent")){
-    #   ggplot(data = before_aca) +
-    #   geom_sf(aes_string(fill = input$variables), crs = 26915) +
-    #     scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-    #     labs(title = paste(variables2[[input$variables]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
-    #     labs(fill = "%2")
-    # }
-    # else if (stringr::str_detect(input$variables, "for", negate = T)) {
-    #   ggplot(data = before_aca) +
-    #   geom_sf(aes_string(fill = input$variables), crs = 26915) +
-    #     scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-    #     labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
-    #     labs(fill = "#3")
-    # }
-    #   else {
-    #     ggplot(data = before_aca) +
-    #     geom_sf(aes_string(fill = input$variables), crs = 26915) +
-    #     scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-    #     labs(title = paste(variables2[[input$variables]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
-    #     labs(fill = "#4")
-    #     
-    # }
     if(stringr::str_detect(input$variables, "for", negate = T)){
       p <- ggplot(data = before_aca) +
         geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-        labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
+        labs(title = paste(sahie_list2[[input$year_before_ACA]])) +
         labs(fill = "%") +
-        theme(legend.position = "none")
+        theme(legend.position = "none") +
+        scale_fill_viridis()
       ggplotly(p)
     }
+    #labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
+
     else{
       p <- ggplot(data = before_aca) +
         geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-        labs(title = paste(variables2[[input$variables]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
+        labs(title = paste(sahie_list2[[input$year_before_ACA]])) +
         labs(fill = "%") +
-        theme(legend.position = "none")
+        theme(legend.position = "none")+
+        scale_fill_viridis()
       ggplotly(p)
     }
+    #labs(title = paste(variables2[[input$variables]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Pre-ACA)")) +
+
   })
   
   output$map_after_aca <- renderPlotly({
@@ -261,7 +233,6 @@ server <- function(input, output){
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
       filter(geocat == 50) %>% 
-      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Dynamically fetch the before_aca dataframe to calculate shared range
@@ -277,7 +248,6 @@ server <- function(input, output){
       filter(iprcat == input$incomeCat) %>%
       filter(sexcat == input$sexCat) %>%
       filter(geocat == 50) %>% 
-      #filter(racecat == input$raceCat) %>%
       filter(agecat == input$ageCat)
     
     # Compute shared range for consistent legend
@@ -292,18 +262,24 @@ server <- function(input, output){
       p <- ggplot(data = after_aca) +
         geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-        labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
-        labs(fill = "%")
+        labs(title = paste(sahie_list2[[input$year_after_ACA]])) +
+        labs(fill = "%")+
+        scale_fill_viridis()
       ggplotly(p)
     }
+    #labs(title = paste(variables2[[input$variables]], incomeCat2[[input$incomeCat]], "in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
+
     else {
       p <- ggplot(data = after_aca) +
         geom_sf(aes_string(fill = input$variables, County = "NAMELSAD")) +
         scale_fill_continuous(limits = shared_range, oob = scales::squish) +
-        labs(title = paste(variables2[[input$variables]],"in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
-        labs(fill = "%")
+        labs(title = paste(sahie_list2[[input$year_after_ACA]])) +
+        labs(fill = "%")+
+        scale_fill_viridis()
       ggplotly(p)
     }
+    #labs(title = paste(variables2[[input$variables]],"in Minnesota Counties in", sahie_list2[[input$year_after_ACA]], "(Post-ACA)")) +
+
 
   })
 }
