@@ -1,0 +1,169 @@
+Year,Large County,Period,Variable,Value
+2010,0,Before,avg_Mortality Z-Score,0.1925
+2010,0,Before,avg_Morbidity Z-Score,0.23249999999999998
+2010,0,Before,avg_Health Behaviors Z-Score,-0.005
+2010,0,Before,avg_Clinical Care Z-Score,0.10250000000000001
+2010,0,Before,avg_Social & Economic Factors Z-Score,0.025
+2010,0,Before,avg_Physical Environment Z-Score,0.04
+2010,1,Before,avg_Mortality Z-Score,-0.2675
+2010,1,Before,avg_Morbidity Z-Score,0.11
+2010,1,Before,avg_Health Behaviors Z-Score,-0.2025
+2010,1,Before,avg_Clinical Care Z-Score,-0.155
+2010,1,Before,avg_Social & Economic Factors Z-Score,-0.039999999999999994
+2010,1,Before,avg_Physical Environment Z-Score,0
+2011,0,Before,avg_Mortality Z-Score,0.022500000000000003
+2011,0,Before,avg_Morbidity Z-Score,0.1575
+2011,0,Before,avg_Health Behaviors Z-Score,0.0325
+2011,0,Before,avg_Clinical Care Z-Score,0.0825
+2011,0,Before,avg_Social & Economic Factors Z-Score,0.027499999999999997
+2011,0,Before,avg_Physical Environment Z-Score,-0.030000000000000002
+2011,1,Before,avg_Mortality Z-Score,-0.23500000000000001
+2011,1,Before,avg_Morbidity Z-Score,0.1375
+2011,1,Before,avg_Health Behaviors Z-Score,-0.1725
+2011,1,Before,avg_Clinical Care Z-Score,-0.1075
+2011,1,Before,avg_Social & Economic Factors Z-Score,-0.0425
+2011,1,Before,avg_Physical Environment Z-Score,-0.035
+2012,0,Before,avg_Mortality Z-Score,-0.185
+2012,0,Before,avg_Morbidity Z-Score,-0.13
+2012,0,Before,avg_Health Behaviors Z-Score,-0.07999999999999999
+2012,0,Before,avg_Clinical Care Z-Score,0.015
+2012,0,Before,avg_Social & Economic Factors Z-Score,-0.05
+2012,0,Before,avg_Physical Environment Z-Score,-0.0049999999999999975
+2012,1,Before,avg_Mortality Z-Score,-0.2775
+2012,1,Before,avg_Morbidity Z-Score,0.1625
+2012,1,Before,avg_Health Behaviors Z-Score,-0.1225
+2012,1,Before,avg_Clinical Care Z-Score,-0.0775
+2012,1,Before,avg_Social & Economic Factors Z-Score,0.1025
+2012,1,Before,avg_Physical Environment Z-Score,0.02
+2013,0,Before,avg_Mortality Z-Score,-0.0925
+2013,0,Before,avg_Morbidity Z-Score,-0.1675
+2013,0,Before,avg_Health Behaviors Z-Score,-0.0775
+2013,0,Before,avg_Clinical Care Z-Score,0.09
+2013,0,Before,avg_Social & Economic Factors Z-Score,-0.08499999999999999
+2013,0,Before,avg_Physical Environment Z-Score,-0.04
+2013,1,Before,avg_Mortality Z-Score,-0.2525
+2013,1,Before,avg_Morbidity Z-Score,0.215
+2013,1,Before,avg_Health Behaviors Z-Score,-0.1225
+2013,1,Before,avg_Clinical Care Z-Score,-0.105
+2013,1,Before,avg_Social & Economic Factors Z-Score,0.0625
+2013,1,Before,avg_Physical Environment Z-Score,0.0225
+2014,0,Before,avg_Mortality Z-Score,-0.0925
+2014,0,Before,avg_Morbidity Z-Score,-0.042499999999999996
+2014,0,Before,avg_Health Behaviors Z-Score,0.0475
+2014,0,Before,avg_Clinical Care Z-Score,0.065
+2014,0,Before,avg_Social & Economic Factors Z-Score,-0.0025000000000000022
+2014,0,Before,avg_Physical Environment Z-Score,-0.08
+2014,1,Before,avg_Mortality Z-Score,-0.2525
+2014,1,Before,avg_Morbidity Z-Score,0.195
+2014,1,Before,avg_Health Behaviors Z-Score,-0.13
+2014,1,Before,avg_Clinical Care Z-Score,-0.08
+2014,1,Before,avg_Social & Economic Factors Z-Score,-0.0025000000000000126
+2014,1,Before,avg_Physical Environment Z-Score,0.0275
+2015,0,After,avg_Mortality Z-Score,0.0675
+2015,0,After,avg_Morbidity Z-Score,-0.3175
+2015,0,After,avg_Health Behaviors Z-Score,0.042499999999999996
+2015,0,After,avg_Clinical Care Z-Score,0.0725
+2015,0,After,avg_Social & Economic Factors Z-Score,-0.0125
+2015,0,After,avg_Physical Environment Z-Score,-0.0725
+2015,1,After,avg_Mortality Z-Score,-0.27
+2015,1,After,avg_Morbidity Z-Score,0.20500000000000002
+2015,1,After,avg_Health Behaviors Z-Score,-0.15
+2015,1,After,avg_Clinical Care Z-Score,-0.0875
+2015,1,After,avg_Social & Economic Factors Z-Score,6.938893903907228e-18
+2015,1,After,avg_Physical Environment Z-Score,0.0275
+2016,0,After,avg_Mortality Z-Score,-0.2
+2016,0,After,avg_Morbidity Z-Score,-0.3775
+2016,0,After,avg_Health Behaviors Z-Score,0.0049999999999999975
+2016,0,After,avg_Clinical Care Z-Score,0.1425
+2016,0,After,avg_Social & Economic Factors Z-Score,-0.0625
+2016,0,After,avg_Physical Environment Z-Score,-0.06999999999999999
+2016,1,After,avg_Mortality Z-Score,-0.3025
+2016,1,After,avg_Morbidity Z-Score,0.11499999999999999
+2016,1,After,avg_Health Behaviors Z-Score,-0.15
+2016,1,After,avg_Clinical Care Z-Score,-0.08750000000000001
+2016,1,After,avg_Social & Economic Factors Z-Score,-0.030000000000000006
+2016,1,After,avg_Physical Environment Z-Score,0.0475
+2017,0,After,avg_Mortality Z-Score,-0.06
+2017,0,After,avg_Morbidity Z-Score,-0.35250000000000004
+2017,0,After,avg_Health Behaviors Z-Score,-0.012499999999999999
+2017,0,After,avg_Clinical Care Z-Score,0.1025
+2017,0,After,avg_Social & Economic Factors Z-Score,0.0125
+2017,0,After,avg_Physical Environment Z-Score,-0.0925
+2017,1,After,avg_Mortality Z-Score,-0.265
+2017,1,After,avg_Morbidity Z-Score,0.010000000000000002
+2017,1,After,avg_Health Behaviors Z-Score,-0.13
+2017,1,After,avg_Clinical Care Z-Score,-0.0875
+2017,1,After,avg_Social & Economic Factors Z-Score,-0.065
+2017,1,After,avg_Physical Environment Z-Score,0.10250000000000001
+2018,0,After,avg_Mortality Z-Score,-0.0175
+2018,0,After,avg_Morbidity Z-Score,-0.255
+2018,0,After,avg_Health Behaviors Z-Score,0.007499999999999998
+2018,0,After,avg_Clinical Care Z-Score,0.15
+2018,0,After,avg_Social & Economic Factors Z-Score,0.009999999999999998
+2018,0,After,avg_Physical Environment Z-Score,-0.08499999999999999
+2018,1,After,avg_Mortality Z-Score,-0.285
+2018,1,After,avg_Morbidity Z-Score,0.030000000000000002
+2018,1,After,avg_Health Behaviors Z-Score,-0.145
+2018,1,After,avg_Clinical Care Z-Score,-0.085
+2018,1,After,avg_Social & Economic Factors Z-Score,-0.0725
+2018,1,After,avg_Physical Environment Z-Score,0.085
+2019,0,After,avg_Mortality Z-Score,-0.06
+2019,0,After,avg_Morbidity Z-Score,-0.1525
+2019,0,After,avg_Health Behaviors Z-Score,0.015
+2019,0,After,avg_Clinical Care Z-Score,0.125
+2019,0,After,avg_Social & Economic Factors Z-Score,0.0075
+2019,0,After,avg_Physical Environment Z-Score,-0.065
+2019,1,After,avg_Mortality Z-Score,-0.255
+2019,1,After,avg_Morbidity Z-Score,0.020000000000000007
+2019,1,After,avg_Health Behaviors Z-Score,-0.1625
+2019,1,After,avg_Clinical Care Z-Score,-0.0675
+2019,1,After,avg_Social & Economic Factors Z-Score,-0.05
+2019,1,After,avg_Physical Environment Z-Score,0.055
+2020,0,After,avg_Mortality Z-Score,0
+2020,0,After,avg_Morbidity Z-Score,-0.2125
+2020,0,After,avg_Health Behaviors Z-Score,0.055
+2020,0,After,avg_Clinical Care Z-Score,0.1025
+2020,0,After,avg_Social & Economic Factors Z-Score,-0.005000000000000003
+2020,0,After,avg_Physical Environment Z-Score,-0.0725
+2020,1,After,avg_Mortality Z-Score,-0.25
+2020,1,After,avg_Morbidity Z-Score,0.05500000000000001
+2020,1,After,avg_Health Behaviors Z-Score,-0.15
+2020,1,After,avg_Clinical Care Z-Score,-0.07250000000000001
+2020,1,After,avg_Social & Economic Factors Z-Score,-0.065
+2020,1,After,avg_Physical Environment Z-Score,0.10250000000000001
+2021,0,After,avg_Mortality Z-Score,0
+2021,0,After,avg_Morbidity Z-Score,-0.095
+2021,0,After,avg_Health Behaviors Z-Score,0.0975
+2021,0,After,avg_Clinical Care Z-Score,0.025
+2021,0,After,avg_Social & Economic Factors Z-Score,0.017500000000000005
+2021,0,After,avg_Physical Environment Z-Score,-0.06
+2021,1,After,avg_Mortality Z-Score,-0.2575
+2021,1,After,avg_Morbidity Z-Score,-0.02500000000000001
+2021,1,After,avg_Health Behaviors Z-Score,-0.2725
+2021,1,After,avg_Clinical Care Z-Score,-0.045
+2021,1,After,avg_Social & Economic Factors Z-Score,-0.11249999999999999
+2021,1,After,avg_Physical Environment Z-Score,0.057499999999999996
+2022,0,After,avg_Mortality Z-Score,0
+2022,0,After,avg_Morbidity Z-Score,0.022500000000000006
+2022,0,After,avg_Health Behaviors Z-Score,0.1075
+2022,0,After,avg_Clinical Care Z-Score,-0.0325
+2022,0,After,avg_Social & Economic Factors Z-Score,-0.095
+2022,0,After,avg_Physical Environment Z-Score,-0.0475
+2022,1,After,avg_Mortality Z-Score,-0.235
+2022,1,After,avg_Morbidity Z-Score,-0.225
+2022,1,After,avg_Health Behaviors Z-Score,-0.3125
+2022,1,After,avg_Clinical Care Z-Score,-0.0925
+2022,1,After,avg_Social & Economic Factors Z-Score,0.027500000000000004
+2022,1,After,avg_Physical Environment Z-Score,0.0425
+2023,0,After,avg_Mortality Z-Score,0
+2023,0,After,avg_Morbidity Z-Score,-0.0325
+2023,0,After,avg_Health Behaviors Z-Score,0.08
+2023,0,After,avg_Clinical Care Z-Score,-0.03
+2023,0,After,avg_Social & Economic Factors Z-Score,-0.05750000000000001
+2023,0,After,avg_Physical Environment Z-Score,-0.0525
+2023,1,After,avg_Mortality Z-Score,-0.235
+2023,1,After,avg_Morbidity Z-Score,-0.035
+2023,1,After,avg_Health Behaviors Z-Score,-0.2975
+2023,1,After,avg_Clinical Care Z-Score,-0.085
+2023,1,After,avg_Social & Economic Factors Z-Score,-0.10500000000000001
+2023,1,After,avg_Physical Environment Z-Score,0.0325

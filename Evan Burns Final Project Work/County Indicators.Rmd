@@ -1,0 +1,754 @@
+---
+title: "Projects Work"
+author: "Evan Burns"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(tidyr)
+library(ggplot2)
+library(ggthemes)
+
+rankings <- read.csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_factors.csv")
+
+# hennepin <- rankings %>%
+#   filter(County == 'Hennepin') %>%
+#   mutate(Year = as.numeric(as.character(Year))) %>%
+#   mutate(Period = ifelse(Year < 2015, "Before", "After"))
+# 
+# ramsey <- rankings %>%
+#   filter(County == 'Ramsey') %>%
+#   mutate(Year = as.numeric(as.character(Year))) %>%
+#   mutate(Period = ifelse(Year < 2015, "Before", "After"))
+# 
+# lotw <- rankings %>%
+#   filter(County == 'Lake of the Woods') %>%
+#   mutate(Year = as.numeric(as.character(Year))) %>%
+#   mutate(Period = ifelse(Year < 2015, "Before", "After"))
+# 
+# redlake <- rankings %>%
+#   filter(County == 'Red Lake') %>%
+#   mutate(Year = as.numeric(as.character(Year))) %>%
+#   mutate(Period = ifelse(Year < 2015, "Before", "After"))
+# 
+# y2013 <- rankings %>%
+#   filter(Year == '2013')
+
+#Largest Counties: Hennepin, Ramsey, Dakota, Anoka, Washington
+#Smallest Counties: Traverse, Lake of the Woods, Red Lake, Kittson, Big Stone
+
+hrho <- rankings %>%
+  filter(County == 'Ramsey' | County == 'Hennepin' | County == 'Dakota' | County == 'Anoka' | County == 'Lake of the Woods' | County == 'Red Lake' | County == 'Kittson' | County == 'Big Stone') %>%
+  # select(- 'X') %>%
+  mutate(Period = ifelse(Year < 2015, "Before", "After"))
+  
+
+# ggplot(data = hennepin, aes(x = Year, y = HO_Rank, group = Period)) +
+#   geom_point() +
+#   geom_vline(xintercept = 2014, linetype = 'dashed', color = 'red') +
+#   geom_smooth(method = 'lm', se = FALSE)
+# 
+# ggplot(data = ramsey, aes(x = Year, y = HO_Rank, group = Period)) +
+#   geom_point() +
+#   geom_vline(xintercept = 2014, linetype = 'dashed', color = 'red') +
+#   geom_smooth(method = 'lm', se = FALSE)
+# 
+# ggplot(data = lotw, aes(x = Year, y = HO_Rank, group = Period)) +
+#   geom_point() +
+#   geom_vline(xintercept = 2014, linetype = 'dashed', color = 'red') +
+#   geom_smooth(method = 'lm', se = FALSE)
+# 
+# ggplot(data = redlake, aes(x = Year, y = HO_Rank, group = Period)) +
+#   geom_point() +
+#   geom_vline(xintercept = 2014, linetype = 'dashed', color = 'red') +
+#   geom_smooth(method = 'lm', se = FALSE)
+```
+
+```{r}
+hrho$County <- factor(hrho$County, levels = c(
+  "Anoka", "Dakota", "Hennepin", "Ramsey", 
+  "Big Stone", "Kittson", "Lake of the Woods", "Red Lake"
+))
+
+ggplot(data = hrho, aes(x = Year, y = HO_Rank, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  )) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    )) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA Health Outcome Trends") +
+  labs(y = "Health Outcomes Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+```
+```{r}
+subrankings2010 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2010 County Health Ranking Minnesota Data - v2.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2010)[4] <- "Mortality Z-Score"
+colnames(subrankings2010)[5] <- "Mortality Rank"
+colnames(subrankings2010)[6] <- "Morbidity Z-Score"
+colnames(subrankings2010)[7] <- "Morbidity Rank"
+colnames(subrankings2010)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2010)[9] <- "Health Behaviors Rank"
+colnames(subrankings2010)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2010)[11] <- "Clinical Care Rank"
+colnames(subrankings2010)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2010)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2010)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2010)[15] <- "Physical Environment Rank"
+subrankings2010$Year <- 2010
+subrankings2010 <- subrankings2010[-1,]
+
+subrankings2011 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2011 County Health Ranking Minnesota Data - v4.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2011)[4] <- "Mortality Z-Score"
+colnames(subrankings2011)[5] <- "Mortality Rank"
+colnames(subrankings2011)[6] <- "Morbidity Z-Score"
+colnames(subrankings2011)[7] <- "Morbidity Rank"
+colnames(subrankings2011)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2011)[9] <- "Health Behaviors Rank"
+colnames(subrankings2011)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2011)[11] <- "Clinical Care Rank"
+colnames(subrankings2011)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2011)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2011)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2011)[15] <- "Physical Environment Rank"
+subrankings2011$Year <- 2011
+subrankings2011 <- subrankings2011[-1,]
+
+subrankings2012 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2012 County Health Ranking Minnesota Data - v4.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2012)[4] <- "Mortality Z-Score"
+colnames(subrankings2012)[5] <- "Mortality Rank"
+colnames(subrankings2012)[6] <- "Morbidity Z-Score"
+colnames(subrankings2012)[7] <- "Morbidity Rank"
+colnames(subrankings2012)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2012)[9] <- "Health Behaviors Rank"
+colnames(subrankings2012)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2012)[11] <- "Clinical Care Rank"
+colnames(subrankings2012)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2012)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2012)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2012)[15] <- "Physical Environment Rank"
+subrankings2012$Year <- 2012
+subrankings2012 <- subrankings2012[-1,]
+
+subrankings2013 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2013 County Health Ranking Minnesota Data - v1_0.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2013)[4] <- "Mortality Z-Score"
+colnames(subrankings2013)[5] <- "Mortality Rank"
+colnames(subrankings2013)[6] <- "Morbidity Z-Score"
+colnames(subrankings2013)[7] <- "Morbidity Rank"
+colnames(subrankings2013)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2013)[9] <- "Health Behaviors Rank"
+colnames(subrankings2013)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2013)[11] <- "Clinical Care Rank"
+colnames(subrankings2013)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2013)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2013)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2013)[15] <- "Physical Environment Rank"
+subrankings2013$Year <- 2013
+subrankings2013 <- subrankings2013[-1,]
+
+subrankings2014 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2014 County Health Rankings Minnesota Data - v6.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2014)[4] <- "Mortality Z-Score"
+colnames(subrankings2014)[5] <- "Mortality Rank"
+colnames(subrankings2014)[6] <- "Morbidity Z-Score"
+colnames(subrankings2014)[7] <- "Morbidity Rank"
+colnames(subrankings2014)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2014)[9] <- "Health Behaviors Rank"
+colnames(subrankings2014)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2014)[11] <- "Clinical Care Rank"
+colnames(subrankings2014)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2014)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2014)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2014)[15] <- "Physical Environment Rank"
+subrankings2014$Year <- 2014
+subrankings2014 <- subrankings2014[-1,]
+
+subrankings2015 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2015 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2015)[4] <- "Mortality Z-Score"
+colnames(subrankings2015)[5] <- "Mortality Rank"
+colnames(subrankings2015)[6] <- "Morbidity Z-Score"
+colnames(subrankings2015)[7] <- "Morbidity Rank"
+colnames(subrankings2015)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2015)[9] <- "Health Behaviors Rank"
+colnames(subrankings2015)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2015)[11] <- "Clinical Care Rank"
+colnames(subrankings2015)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2015)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2015)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2015)[15] <- "Physical Environment Rank"
+subrankings2015$Year <- 2015
+subrankings2015<- subrankings2015[-1,]
+
+subrankings2016 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2016 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2016)[4] <- "Mortality Z-Score"
+colnames(subrankings2016)[5] <- "Mortality Rank"
+colnames(subrankings2016)[6] <- "Morbidity Z-Score"
+colnames(subrankings2016)[7] <- "Morbidity Rank"
+colnames(subrankings2016)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2016)[9] <- "Health Behaviors Rank"
+colnames(subrankings2016)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2016)[11] <- "Clinical Care Rank"
+colnames(subrankings2016)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2016)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2016)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2016)[15] <- "Physical Environment Rank"
+subrankings2016$Year <- 2016
+subrankings2016 <- subrankings2016[-1,]
+
+subrankings2017 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2017 County Health Rankings Minnesota Data - v2.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2017)[4] <- "Mortality Z-Score"
+colnames(subrankings2017)[5] <- "Mortality Rank"
+colnames(subrankings2017)[6] <- "Morbidity Z-Score"
+colnames(subrankings2017)[7] <- "Morbidity Rank"
+colnames(subrankings2017)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2017)[9] <- "Health Behaviors Rank"
+colnames(subrankings2017)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2017)[11] <- "Clinical Care Rank"
+colnames(subrankings2017)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2017)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2017)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2017)[15] <- "Physical Environment Rank"
+subrankings2017$Year <- 2017
+subrankings2017 <- subrankings2017[-1,]
+
+subrankings2018 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2018 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2018)[4] <- "Mortality Z-Score"
+colnames(subrankings2018)[5] <- "Mortality Rank"
+colnames(subrankings2018)[6] <- "Morbidity Z-Score"
+colnames(subrankings2018)[7] <- "Morbidity Rank"
+colnames(subrankings2018)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2018)[9] <- "Health Behaviors Rank"
+colnames(subrankings2018)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2018)[11] <- "Clinical Care Rank"
+colnames(subrankings2018)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2018)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2018)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2018)[15] <- "Physical Environment Rank"
+subrankings2018$Year <- 2018
+subrankings2018 <- subrankings2018[-1,]
+
+subrankings2019 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2019 County Health Rankings Minnesota Data - v1_0.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2019)[4] <- "Mortality Z-Score"
+colnames(subrankings2019)[5] <- "Mortality Rank"
+colnames(subrankings2019)[6] <- "Morbidity Z-Score"
+colnames(subrankings2019)[7] <- "Morbidity Rank"
+colnames(subrankings2019)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2019)[9] <- "Health Behaviors Rank"
+colnames(subrankings2019)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2019)[11] <- "Clinical Care Rank"
+colnames(subrankings2019)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2019)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2019)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2019)[15] <- "Physical Environment Rank"
+subrankings2019$Year <- 2019
+subrankings2019 <- subrankings2019[-1,]
+
+subrankings2020 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2020 County Health Rankings Minnesota Data - v1_0.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2020)[4] <- "Mortality Z-Score"
+colnames(subrankings2020)[5] <- "Mortality Rank"
+colnames(subrankings2020)[6] <- "Morbidity Z-Score"
+colnames(subrankings2020)[7] <- "Morbidity Rank"
+colnames(subrankings2020)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2020)[9] <- "Health Behaviors Rank"
+colnames(subrankings2020)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2020)[11] <- "Clinical Care Rank"
+colnames(subrankings2020)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2020)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2020)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2020)[15] <- "Physical Environment Rank"
+subrankings2020$Year <- 2020
+subrankings2020 <- subrankings2020[-1,]
+
+subrankings2021 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2021 County Health Rankings Minnesota Data - v1.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2021)[4] <- "Mortality Z-Score"
+colnames(subrankings2021)[5] <- "Mortality Rank"
+colnames(subrankings2021)[6] <- "Morbidity Z-Score"
+colnames(subrankings2021)[7] <- "Morbidity Rank"
+colnames(subrankings2021)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2021)[9] <- "Health Behaviors Rank"
+colnames(subrankings2021)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2021)[11] <- "Clinical Care Rank"
+colnames(subrankings2021)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2021)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2021)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2021)[15] <- "Physical Environment Rank"
+subrankings2021$Year <- 2021
+subrankings2021 <- subrankings2021[-1,]
+
+subrankings2022 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2022 County Health Rankings Minnesota Data - v1_0.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2022)[4] <- "Mortality Z-Score"
+colnames(subrankings2022)[5] <- "Mortality Rank"
+colnames(subrankings2022)[6] <- "Morbidity Z-Score"
+colnames(subrankings2022)[7] <- "Morbidity Rank"
+colnames(subrankings2022)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2022)[9] <- "Health Behaviors Rank"
+colnames(subrankings2022)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2022)[11] <- "Clinical Care Rank"
+colnames(subrankings2022)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2022)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2022)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2022)[15] <- "Physical Environment Rank"
+subrankings2022$Year <- 2022
+subrankings2022 <- subrankings2022[-1,]
+
+subrankings2023 <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/County Health Outcomes & Factors SubRankings/2023 County Health Rankings Minnesota Data - v2.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2023)[4] <- "Mortality Z-Score"
+colnames(subrankings2023)[5] <- "Mortality Rank"
+colnames(subrankings2023)[6] <- "Morbidity Z-Score"
+colnames(subrankings2023)[7] <- "Morbidity Rank"
+colnames(subrankings2023)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2023)[9] <- "Health Behaviors Rank"
+colnames(subrankings2023)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2023)[11] <- "Clinical Care Rank"
+colnames(subrankings2023)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2023)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2023)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2023)[15] <- "Physical Environment Rank"
+subrankings2023$Year <- 2023
+subrankings2023 <- subrankings2023[-1,]
+
+
+subrankings <- rbind(subrankings2010,subrankings2011)
+subrankings <- rbind(subrankings,subrankings2012)
+subrankings <- rbind(subrankings,subrankings2013)
+subrankings <- rbind(subrankings,subrankings2014)
+subrankings <- rbind(subrankings,subrankings2015)
+subrankings <- rbind(subrankings,subrankings2016)
+subrankings <- rbind(subrankings,subrankings2017)
+subrankings <- rbind(subrankings,subrankings2018)
+subrankings <- rbind(subrankings,subrankings2019)
+subrankings <- rbind(subrankings,subrankings2020)
+subrankings <- rbind(subrankings,subrankings2021)
+subrankings <- rbind(subrankings,subrankings2022)
+subrankings <- rbind(subrankings,subrankings2023)
+
+subrankings_subset <- subrankings %>%
+  filter(County %in% c("Hennepin","Ramsey","Anoka","Dakota","Lake of the Woods","Red Lake","Kittson","Big Stone"))
+
+subrankings_subset <- subrankings_subset %>%
+  mutate(Period = ifelse(Year < 2015, "Before", "After")) %>%
+  filter(!apply(., 1, function(row) any(row == "NR"))) %>%
+  mutate(across(4:15, as.numeric))
+```
+
+```{r}
+# Mortality Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Mortality Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Mortality Trends") +
+  labs(y = "Mortality Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#Morbidity Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Morbidity Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Morbidity Trends") +
+  labs(y = "Morbidity Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Health Behaviors Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Health Behaviors Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Health Behavior Trends") +
+  labs(y = "Health Behavior Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Clinical Care Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Clinical Care Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Clinical Care Trends") +
+  labs(y = "Clinical Care Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Social & Economic Factors Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Social & Economic Factors Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Scocial & Economic Factors Trends") +
+  labs(y = "Social & Economic Factors Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Physical Environment Rank
+
+ggplot(data = subrankings_subset, aes(x = Year, y = `Physical Environment Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Physical Environment Trends") +
+  labs(y = "Physical Environment Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+subrankings_supplemental <- subrankings_subset
+subrankings_supplemental$`Large County` <- ifelse(subrankings_supplemental$County %in% c("Anoka", "Dakota", "Hennepin", "Ramsey"), 1, 0)
+
+subrankings_supplemental <- subrankings_supplemental %>%
+  select(- c(FIPS, State, County, Period))
+
+subrankings_supplemental <- subrankings_supplemental %>%
+  group_by(Year, `Large County`) %>%
+  summarise(across(everything(), ~mean(.x, na.rm = TRUE), .names = "avg_{.col}")) %>%
+  mutate(Period = ifelse(Year < 2015, "Before", "After"))
+
+subrankings_supplemental_long <- subrankings_supplemental %>%
+  pivot_longer(
+    cols = c(`avg_Mortality Z-Score`,
+             `avg_Mortality Rank`,
+             `avg_Morbidity Z-Score`,
+             `avg_Morbidity Rank`,
+             `avg_Health Behaviors Z-Score`,
+             `avg_Health Behaviors Rank`,
+             `avg_Clinical Care Z-Score`,
+             `avg_Clinical Care Rank`,
+             `avg_Social & Economic Factors Z-Score`,
+             `avg_Social & Economic Factors Rank`,
+             `avg_Physical Environment Z-Score`,
+             `avg_Physical Environment Rank`),
+    names_to = "Variable",
+    values_to = "Value"
+  ) %>%
+  filter(!Variable %in% c("avg_Mortality Rank","avg_Morbidity Rank","avg_Health Behaviors Rank","avg_Clinical Care Rank", "avg_Social & Economic Factors Rank", "avg_Physical Environment Rank"))
+
+subrankings_supplemental_long_mortality_morbidity <- subrankings_supplemental_long %>%
+  filter(Variable %in% c("avg_Mortality Z-Score", "avg_Morbidity Z-Score"))
+```
+
+```{r}
+ggplot(data = subrankings_supplemental_long, aes(x = Year, y = Value, color = Variable, group = interaction(Variable, Period, `Large County`))) +
+  geom_point(size = 0.50, na.rm = TRUE, alpha = 0.6) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(Variable,Period, `Large County`), linetype = as.factor(`Large County`)), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "avg_Mortality Z-Score" = "#440154FF",  
+    "avg_Morbidity Z-Score" = "#404788FF",    
+    "avg_Health Behaviors Z-Score" = "#287D8EFF",     
+    "avg_Clinical Care Z-Score" = "#20A387FF",    
+    "avg_Social & Economic Factors Z-Score" = "#73D055FF",  
+    "avg_Physical Environment Z-Score" = "#FDE725FF"          
+  ),
+  breaks = c("avg_Mortality Z-Score", "avg_Morbidity Z-Score", "avg_Health Behaviors Z-Score", "avg_Clinical Care Z-Score", "avg_Social & Economic Factors Z-Score", "avg_Physical Environment Z-Score")) +
+  scale_linetype_manual(values = c(
+    "0" = "solid",
+    "1" = "dashed"
+  )) +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have solid lines\nLarge counties have dashed lines") +
+  labs(title = "Before/After ACA - County Indicator Z-Score Trends") +
+  labs(y = "Z-Score") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+ggplot(data = subrankings_supplemental_long_mortality_morbidity, aes(x = Year, y = Value, color = Variable, group = interaction(Variable, Period, `Large County`))) +
+  geom_point(size = 0.50, na.rm = TRUE, alpha = 0.6) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(Variable,Period, `Large County`), linetype = as.factor(`Large County`)), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "avg_Mortality Z-Score" = "#440154FF",  
+    "avg_Morbidity Z-Score" = "#73D055FF"
+  ),
+  breaks = c("avg_Mortality Z-Score", "avg_Morbidity Z-Score")) +
+  scale_linetype_manual(values = c(
+    "0" = "solid",
+    "1" = "dashed"
+  )) +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have solid lines\nLarge counties have dashed lines") +
+  labs(title = "Before/After ACA - County Indicator Z-Score Trends (Only Mortality/Morbidity") +
+  labs(y = "Z-Score") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+subrankings_supplemental_table <- subrankings_supplemental %>%
+  select(- c(`avg_Mortality Rank`,`avg_Morbidity Rank`,`avg_Health Behaviors Rank`,`avg_Clinical Care Rank`,`avg_Social & Economic Factors Rank`,`avg_Physical Environment Rank`)) %>%
+  group_by(`Large County`,Period) %>%
+  summarise(across(everything(), ~mean(.x, na.rm = TRUE), .names = "avg_{.col}")) %>%
+  select(- avg_Year)
+
+subrankings_supplemental_table_longer <- subrankings_supplemental_table %>%
+  pivot_longer(
+    cols = c(
+      `avg_avg_Mortality Z-Score`,
+      `avg_avg_Morbidity Z-Score`,
+      `avg_avg_Health Behaviors Z-Score`,
+      `avg_avg_Clinical Care Z-Score`,
+      `avg_avg_Social & Economic Factors Z-Score`,
+      `avg_avg_Physical Environment Z-Score`
+    ),
+    names_to = "Variable",
+    values_to = "Value"
+  )
+
+ggplot(data = subrankings_supplemental_table_longer, aes(x = interaction(`Large County`, Period), y = Value, fill = interaction(`Large County`, Period))) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ Variable, labeller = labeller(
+    Variable  = c(
+      "avg_avg_Mortality Z-Score" = "Mortality",
+      "avg_avg_Morbidity Z-Score" = "Morbidity",
+      "avg_avg_Health Behaviors Z-Score" = "Health Behaviors",
+      "avg_avg_Clinical Care Z-Score" = "Clinical Care",
+      "avg_avg_Social & Economic Factors Z-Score" = "Soci./Econ. Factors",
+      "avg_avg_Physical Environment Z-Score" = "Physical Environment"
+    )
+  )) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = c(
+    "0.After" = "#440154FF",
+    "1.After" = "#287D8EFF",
+    "0.Before" = "#73D055FF",
+    "1.Before" = "#FDE725FF"
+  ),
+  breaks = c("0.Before", "0.After", "1.Before", "1.After"),
+  labels = c("Small Counties, Before", "Small Counties, After", "Large Counties, Before", "Large Counties, After")) +
+  scale_x_discrete(limits = c("0.Before", "0.After", "1.Before", "1.After")) +
+  labs(fill = "County Type/Time Period") +
+  labs(x = "County Type/Time Period") +
+  labs(y = "Average Z-Score (Across Counties/Years in Group)") +
+  labs(title = "Before/After ACA - County Indicator Z-Score Trends") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+write_csv(hrho, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_factors.csv")
+write_csv(subrankings, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_subfactors.csv")
+write_csv(subrankings_supplemental, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_sup_gavg_ba_wide.csv")
+write_csv(subrankings_supplemental_long, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_sup_gavg_ba_long.csv")
+write_csv(subrankings_supplemental_table, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_sup_gavgavg_ba_wide.csv")
+write_csv(subrankings_supplemental_table_longer, "~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Clean Data/hfho_sup_gavgavg_ba_long.csv")
+```
+
+
+
+
+
+
+
