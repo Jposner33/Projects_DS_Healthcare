@@ -30,10 +30,268 @@ library(dagitty)
 library(readr)
 library(stringr)
 library(viridis)
+library(ggthemes)
 ```
 ```{r}
 # Load Data
+rankings <- read.csv("Data/hfho_factors.csv")
 
+hrho <- rankings %>%
+  filter(County == 'Ramsey' | County == 'Hennepin' | County == 'Dakota' | County == 'Anoka' | County == 'Lake of the Woods' | County == 'Red Lake' | County == 'Kittson' | County == 'Big Stone') %>%
+  # select(- 'X') %>%
+  mutate(Period = ifelse(Year < 2015, "Before", "After"))
+
+hrho$County <- factor(hrho$County, levels = c(
+  "Anoka", "Dakota", "Hennepin", "Ramsey", 
+  "Big Stone", "Kittson", "Lake of the Woods", "Red Lake"
+))
+
+subrankings2010 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2010 County Health Ranking Minnesota Data - v2.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2010)[4] <- "Mortality Z-Score"
+colnames(subrankings2010)[5] <- "Mortality Rank"
+colnames(subrankings2010)[6] <- "Morbidity Z-Score"
+colnames(subrankings2010)[7] <- "Morbidity Rank"
+colnames(subrankings2010)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2010)[9] <- "Health Behaviors Rank"
+colnames(subrankings2010)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2010)[11] <- "Clinical Care Rank"
+colnames(subrankings2010)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2010)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2010)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2010)[15] <- "Physical Environment Rank"
+subrankings2010$Year <- 2010
+subrankings2010 <- subrankings2010[-1,]
+
+subrankings2011 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2011 County Health Ranking Minnesota Data - v4.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2011)[4] <- "Mortality Z-Score"
+colnames(subrankings2011)[5] <- "Mortality Rank"
+colnames(subrankings2011)[6] <- "Morbidity Z-Score"
+colnames(subrankings2011)[7] <- "Morbidity Rank"
+colnames(subrankings2011)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2011)[9] <- "Health Behaviors Rank"
+colnames(subrankings2011)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2011)[11] <- "Clinical Care Rank"
+colnames(subrankings2011)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2011)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2011)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2011)[15] <- "Physical Environment Rank"
+subrankings2011$Year <- 2011
+subrankings2011 <- subrankings2011[-1,]
+
+subrankings2012 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2012 County Health Ranking Minnesota Data - v4.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2012)[4] <- "Mortality Z-Score"
+colnames(subrankings2012)[5] <- "Mortality Rank"
+colnames(subrankings2012)[6] <- "Morbidity Z-Score"
+colnames(subrankings2012)[7] <- "Morbidity Rank"
+colnames(subrankings2012)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2012)[9] <- "Health Behaviors Rank"
+colnames(subrankings2012)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2012)[11] <- "Clinical Care Rank"
+colnames(subrankings2012)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2012)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2012)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2012)[15] <- "Physical Environment Rank"
+subrankings2012$Year <- 2012
+subrankings2012 <- subrankings2012[-1,]
+
+subrankings2013 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2013 County Health Ranking Minnesota Data - v1_0.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2013)[4] <- "Mortality Z-Score"
+colnames(subrankings2013)[5] <- "Mortality Rank"
+colnames(subrankings2013)[6] <- "Morbidity Z-Score"
+colnames(subrankings2013)[7] <- "Morbidity Rank"
+colnames(subrankings2013)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2013)[9] <- "Health Behaviors Rank"
+colnames(subrankings2013)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2013)[11] <- "Clinical Care Rank"
+colnames(subrankings2013)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2013)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2013)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2013)[15] <- "Physical Environment Rank"
+subrankings2013$Year <- 2013
+subrankings2013 <- subrankings2013[-1,]
+
+subrankings2014 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2014 County Health Rankings Minnesota Data - v6.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2014)[4] <- "Mortality Z-Score"
+colnames(subrankings2014)[5] <- "Mortality Rank"
+colnames(subrankings2014)[6] <- "Morbidity Z-Score"
+colnames(subrankings2014)[7] <- "Morbidity Rank"
+colnames(subrankings2014)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2014)[9] <- "Health Behaviors Rank"
+colnames(subrankings2014)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2014)[11] <- "Clinical Care Rank"
+colnames(subrankings2014)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2014)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2014)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2014)[15] <- "Physical Environment Rank"
+subrankings2014$Year <- 2014
+subrankings2014 <- subrankings2014[-1,]
+
+subrankings2015 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2015 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2015)[4] <- "Mortality Z-Score"
+colnames(subrankings2015)[5] <- "Mortality Rank"
+colnames(subrankings2015)[6] <- "Morbidity Z-Score"
+colnames(subrankings2015)[7] <- "Morbidity Rank"
+colnames(subrankings2015)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2015)[9] <- "Health Behaviors Rank"
+colnames(subrankings2015)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2015)[11] <- "Clinical Care Rank"
+colnames(subrankings2015)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2015)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2015)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2015)[15] <- "Physical Environment Rank"
+subrankings2015$Year <- 2015
+subrankings2015<- subrankings2015[-1,]
+
+subrankings2016 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2016 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2016)[4] <- "Mortality Z-Score"
+colnames(subrankings2016)[5] <- "Mortality Rank"
+colnames(subrankings2016)[6] <- "Morbidity Z-Score"
+colnames(subrankings2016)[7] <- "Morbidity Rank"
+colnames(subrankings2016)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2016)[9] <- "Health Behaviors Rank"
+colnames(subrankings2016)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2016)[11] <- "Clinical Care Rank"
+colnames(subrankings2016)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2016)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2016)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2016)[15] <- "Physical Environment Rank"
+subrankings2016$Year <- 2016
+subrankings2016 <- subrankings2016[-1,]
+
+subrankings2017 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2017 County Health Rankings Minnesota Data - v2.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2017)[4] <- "Mortality Z-Score"
+colnames(subrankings2017)[5] <- "Mortality Rank"
+colnames(subrankings2017)[6] <- "Morbidity Z-Score"
+colnames(subrankings2017)[7] <- "Morbidity Rank"
+colnames(subrankings2017)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2017)[9] <- "Health Behaviors Rank"
+colnames(subrankings2017)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2017)[11] <- "Clinical Care Rank"
+colnames(subrankings2017)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2017)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2017)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2017)[15] <- "Physical Environment Rank"
+subrankings2017$Year <- 2017
+subrankings2017 <- subrankings2017[-1,]
+
+subrankings2018 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2018 County Health Rankings Minnesota Data - v3.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2018)[4] <- "Mortality Z-Score"
+colnames(subrankings2018)[5] <- "Mortality Rank"
+colnames(subrankings2018)[6] <- "Morbidity Z-Score"
+colnames(subrankings2018)[7] <- "Morbidity Rank"
+colnames(subrankings2018)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2018)[9] <- "Health Behaviors Rank"
+colnames(subrankings2018)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2018)[11] <- "Clinical Care Rank"
+colnames(subrankings2018)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2018)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2018)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2018)[15] <- "Physical Environment Rank"
+subrankings2018$Year <- 2018
+subrankings2018 <- subrankings2018[-1,]
+
+subrankings2019 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2019 County Health Rankings Minnesota Data - v1_0.xls - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2019)[4] <- "Mortality Z-Score"
+colnames(subrankings2019)[5] <- "Mortality Rank"
+colnames(subrankings2019)[6] <- "Morbidity Z-Score"
+colnames(subrankings2019)[7] <- "Morbidity Rank"
+colnames(subrankings2019)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2019)[9] <- "Health Behaviors Rank"
+colnames(subrankings2019)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2019)[11] <- "Clinical Care Rank"
+colnames(subrankings2019)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2019)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2019)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2019)[15] <- "Physical Environment Rank"
+subrankings2019$Year <- 2019
+subrankings2019 <- subrankings2019[-1,]
+
+subrankings2020 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2020 County Health Rankings Minnesota Data - v1_0.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2020)[4] <- "Mortality Z-Score"
+colnames(subrankings2020)[5] <- "Mortality Rank"
+colnames(subrankings2020)[6] <- "Morbidity Z-Score"
+colnames(subrankings2020)[7] <- "Morbidity Rank"
+colnames(subrankings2020)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2020)[9] <- "Health Behaviors Rank"
+colnames(subrankings2020)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2020)[11] <- "Clinical Care Rank"
+colnames(subrankings2020)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2020)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2020)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2020)[15] <- "Physical Environment Rank"
+subrankings2020$Year <- 2020
+subrankings2020 <- subrankings2020[-1,]
+
+subrankings2021 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2021 County Health Rankings Minnesota Data - v1.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2021)[4] <- "Mortality Z-Score"
+colnames(subrankings2021)[5] <- "Mortality Rank"
+colnames(subrankings2021)[6] <- "Morbidity Z-Score"
+colnames(subrankings2021)[7] <- "Morbidity Rank"
+colnames(subrankings2021)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2021)[9] <- "Health Behaviors Rank"
+colnames(subrankings2021)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2021)[11] <- "Clinical Care Rank"
+colnames(subrankings2021)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2021)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2021)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2021)[15] <- "Physical Environment Rank"
+subrankings2021$Year <- 2021
+subrankings2021 <- subrankings2021[-1,]
+
+subrankings2022 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2022 County Health Rankings Minnesota Data - v1_0.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2022)[4] <- "Mortality Z-Score"
+colnames(subrankings2022)[5] <- "Mortality Rank"
+colnames(subrankings2022)[6] <- "Morbidity Z-Score"
+colnames(subrankings2022)[7] <- "Morbidity Rank"
+colnames(subrankings2022)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2022)[9] <- "Health Behaviors Rank"
+colnames(subrankings2022)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2022)[11] <- "Clinical Care Rank"
+colnames(subrankings2022)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2022)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2022)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2022)[15] <- "Physical Environment Rank"
+subrankings2022$Year <- 2022
+subrankings2022 <- subrankings2022[-1,]
+
+subrankings2023 <- read_csv("Data/County Health Outcomes & Factors SubRankings/2023 County Health Rankings Minnesota Data - v2.xlsx - Outcomes & Factors SubRankings.csv", skip = 1)
+colnames(subrankings2023)[4] <- "Mortality Z-Score"
+colnames(subrankings2023)[5] <- "Mortality Rank"
+colnames(subrankings2023)[6] <- "Morbidity Z-Score"
+colnames(subrankings2023)[7] <- "Morbidity Rank"
+colnames(subrankings2023)[8] <- "Health Behaviors Z-Score"
+colnames(subrankings2023)[9] <- "Health Behaviors Rank"
+colnames(subrankings2023)[10] <- "Clinical Care Z-Score"
+colnames(subrankings2023)[11] <- "Clinical Care Rank"
+colnames(subrankings2023)[12] <- "Social & Economic Factors Z-Score"
+colnames(subrankings2023)[13] <- "Social & Economic Factors Rank"
+colnames(subrankings2023)[14] <- "Physical Environment Z-Score"
+colnames(subrankings2023)[15] <- "Physical Environment Rank"
+subrankings2023$Year <- 2023
+subrankings2023 <- subrankings2023[-1,]
+
+
+subrankings <- rbind(subrankings2010,subrankings2011)
+subrankings <- rbind(subrankings,subrankings2012)
+subrankings <- rbind(subrankings,subrankings2013)
+subrankings <- rbind(subrankings,subrankings2014)
+subrankings <- rbind(subrankings,subrankings2015)
+subrankings <- rbind(subrankings,subrankings2016)
+subrankings <- rbind(subrankings,subrankings2017)
+subrankings <- rbind(subrankings,subrankings2018)
+subrankings <- rbind(subrankings,subrankings2019)
+subrankings <- rbind(subrankings,subrankings2020)
+subrankings <- rbind(subrankings,subrankings2021)
+subrankings <- rbind(subrankings,subrankings2022)
+subrankings <- rbind(subrankings,subrankings2023)
+
+subrankings_subset <- subrankings %>%
+  filter(County %in% c("Hennepin","Ramsey","Anoka","Dakota","Lake of the Woods","Red Lake","Kittson","Big Stone"))
+
+subrankings_subset <- subrankings_subset %>%
+  mutate(Period = ifelse(Year < 2015, "Before", "After")) %>%
+  filter(!apply(., 1, function(row) any(row == "NR"))) %>%
+  mutate(across(4:15, as.numeric))
 ```
 
 ## Introduction
@@ -48,9 +306,9 @@ library(viridis)
 
     We used data from the Small Area Health Insurance Estimates (SAHIE) Program through the United States Census Bureau website. SAHIE provides the only source of single-year estimates of health insurance coverage status for all U.S. counties, with breakdowns by economic and demographic characteristics such as age, sex, race, and income (U.S. Census Bureau, 2024). It is collected through annual surveys. For this analysis, we focused on data for Minnesota counties only, as our study is geographically restricted to that state. Key variables include county name (the name of the county), health insurance coverage status (percentage of individuals with and without health insurance), and other demographic characteristics (age, sex, race, and income categories). To prepare the data for analysis, we filtered it to include only Minnesota counties. However, we encountered an issue when trying to analyze race-related data, as it was only available at the state level nationwide, while our analysis required county-level data. To ensure the data set was usable for analysis, we converted all variables to a numeric format. These adjustments allowed us to effectively analyze our data and answer our questions. 
 
-    Paragraph about burns data
+    We also sourced from the County Health Rankings & Roadmaps website, hosted by the University of Minnesota Library Guides, specifically focusing on health statistics and data at the state, county, and metropolitan levels. The data is divided into various categories and subcategories, with important variables such as overall rank, Z-scores, and rankings per year. These variables allow for a comprehensive understanding of health outcomes across different regions and time periods. The data was cleaned by first extracting it from Excel files, followed by processing year-specific CSV files, which were then aggregated to include all years for analysis.
 
-    We created a Shiny app to analyze the SAHIE data before and after the ACA's implementation. The app features an interactive map of Minnesota, displaying county-level data on healthcare coverage. Users can select a year from before or after the ACA was implemented to compare healthcare coverage in different counties. The app allows users to choose demographic categories such as age, sex, and income, as well as select variables related to insurance status. These variables represent the percentage of individuals who are insured or uninsured within specific demographic groups, both for selected income categories and across all income levels. The app outputs two maps side by side, comparing the percentage of insured or uninsured individuals in each county for the two selected years. We also used Plotly to enhance the interactivity of the maps, allowing users to zoom in, hover over counties for more detailed information, and compare the data between the selected years. This visualization provides a clear, interactive way to explore how healthcare access has changed across Minnesota’s counties before and after the ACA.
+    We created a [Shiny App](https://jlposner.shinyapps.io/Projects_DS_Healthcare/) to analyze the SAHIE data before and after the ACA's implementation. The app features an interactive map of Minnesota, displaying county-level data on healthcare coverage. Users can select a year from before or after the ACA was implemented to compare healthcare coverage in different counties. The app allows users to choose demographic categories such as age, sex, and income, as well as select variables related to insurance status. These variables represent the percentage of individuals who are insured or uninsured within specific demographic groups, both for selected income categories and across all income levels. The app outputs two maps side by side, comparing the percentage of insured or uninsured individuals in each county for the two selected years. We also used Plotly to enhance the interactivity of the maps, allowing users to zoom in, hover over counties for more detailed information, and compare the data between the selected years. This visualization provides a clear, interactive way to explore how healthcare access has changed across Minnesota’s counties before and after the ACA.
 
 ## Results and Analysis
 
@@ -68,16 +326,384 @@ library(viridis)
 
     While the period from 2013 to 2015 saw a clear positive impact in reducing the number of uninsured individuals, there was a slight uptick in the uninsured rate afterward. This increase can partly be attributed to rising premiums within the ACA framework. However, the actions taken by President Trump during his tenure also played a significant role in this reversal. Throughout his presidency, he took several steps aimed at weakening the ACA. These included cutting funding for outreach and enrollment efforts, promoting waivers that allowed states to reduce ACA enrollment, undermining the regulatory framework of the law, and slashing subsidies to insurance companies offering coverage on the exchanges (Thomson, 2020). While we see a decrease of uninsured rates from 2010-2019, the addition of Trump's presidency decreased the effects of the Affordable Care Act when he stepped into office. 
 
-    Second question. Need to include topic, viz, results
-    ![Coors Field (Max and Dee)](rockies.jpg)
+    Digging deeper into our analysis, we aim to address the question, *What are the differences in before/after outcomes for large vs. small counties?* To answer this question, we are using the four largest and smallest counties in Minnesota with data. Please note that Traverse County, the smallest county in Minnesota, had no data so we used the next four smallest. The counties included in this analysis are Hennepin, Ramsey, Anoka, and Dakota (large) and Big Stone, Kittson, Lake of the Woods, and Red Lake (small). For reference, the locations of the counties can be found below. It is important to note that the four largest counties are located in the Twin Cities metropolitan area.
+
+![Map of Counties Analyzed](images/acaMap.png)
+
+### Health Outcomes
+
+```{r}
+ggplot(data = hrho, aes(x = Year, y = HO_Rank, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  )) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    )) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA Health Outcome Trends") +
+  labs(y = "Health Outcomes Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+    This visualization shows overall health outcome ranking trends in Minnesota from 2010 to 2023. The small counties are represented by blue, dashed lines and the large counties are represented by red, solid lines. We grouped the trends to be either before or after the ACA. On the y-axis, we show the county’s health outcome ranking. The y-axis is flipped to be consistent with the idea that a lower ranking is more positive and so the best ranking counties are at the top of the plot. 
+
+    Each county’s health outcome rating is an index created by County Health Rankings & Roadmaps. The index is an even weighted average between length of life and quality of life, meaning that in this context, health outcome is measured by how strong a county’s quality and length of life is. Furthermore, the length of life and quality of life metrics are made up of subcategories. Length of life includes factors such as premature death, life expectancy, and infant mortality, while quality of life is made up of things including physical and mental wellness. The County Health Rankings & Roadmaps website is [linked here](https://www.countyhealthrankings.org/health-data/health-outcomes?) so you can gain a more detailed understanding of the variables.
+
+    Moving back to the visualization, we chose to compare county rankings because this allowed us to directly compare how counties are changing relative to each other and controls for general trends over time, similar to a difference in difference analysis. Before the ACA was passed, we see that three of the four largest counties (including the two largest) had a negative trend, meaning that relative to other counties, their health outcome is getting worse over time. Conversely, three of the four smallest counties have a positive trend, meaning that their health outcomes ranking is improving more than other counties. After the ACA, these trends flip. We see that all four large counties have a positive trend, meaning that their health outcome determinants are improving faster than other counties while three of four small counties have a negative trend. This suggests that the ACA helped large counties while hurting small counties. Whether or not this is the case and what is driving these trends will be examined below with supplemental plots.
+
+**Health Factors**
+
+    According to the County Health Rankings & Roadmaps website, “health outcomes are influenced by many factors, such as clean water, affordable housing, the quality of medical care and the availability of good jobs.” In other words, the health outcome rankings are being driven by these factors. The County Health Rankings & Roadmaps group supports this idea by implementing another index, called health factors, which ranks counties in Minnesota based on how they perform according to factors that they believe determine health outcomes. The health factors index is a weighted average made up of four determinants: health behaviors (30%), clinical care (20%), social & economic factors (40%) and physical environment (10%). To contextualize this, we have provided a flow chart below. The bottom line is that health outcomes are being caused by different health factors. 
+
+![County Rankings Diagram](images/County Rankings Diagram.jpeg)
+
+```{r}
+ggplot(data = hrho, aes(x = Year, y = HF_Rank, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  )) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    )) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA Health Factor Trends") +
+  labs(y = "Health Factor Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+    Next, we look at the before and after ACA health factor trends to confirm the connection between health factors and health outcomes. If the trends we observed are consistent across health outcomes and health factors, this means that the trend reversals we observed in the health outcome rankings are being driven by changes in health factor trends. Looking at the health factor plot, we see some consistent results (this plot can be interpreted similarly to health outcomes, except in terms of health factors). Once again, we can observe that three out of four large counties changed signs before and after the ACA. However, only one small county changes sign. The results of this plot suggest that health factors are driving the change in health outcomes, but potentially more so in large counties than small counties. Now that we have the intuition that health factors are driving the health outcome trends, we can look more in-depth at which health factors are causing this change. It is worth noting that the following plots can be interpreted in the same way as the above plots, with respect to their index of interest.
+
+**Health Factors Sub-Categories**
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Clinical Care Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Clinical Care Trends") +
+  labs(y = "Clinical Care Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    The first plot to look at is clinical care. We see that after the ACA, three of the four large counties changed from decreasing in rank to more constant. This suggests that the ACA improved clinical care for large counties. For small counties, there was no significant change in trend. This suggests that the ACA did not affect small counties’ clinical care ranking. Because we do observe a change in trends for large counties, it is important to understand what makes up the clinical care ranking. The clinical care ranking is determined by access and quality of care. This means that our plot suggests that because of the ACA, access to care and quality of care in large counties in Minnesota improved, whereas, in small counties, there was no meaningful improvement in access and quality of care.
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Health Behaviors Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Health Behavior Trends") +
+  labs(y = "Health Behavior Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    The next plot to look at is health behavior trends. Here we see that three out of four large counties changed signs from decreasing ranking to increasing ranking after the ACA. This suggests that the ACA improved health behaviors for large counties. For small counties, two of four counties changed signs, one from negative to positive and one from positive to negative. This suggests that there are not consistent results across small counties, but there could be an effect of the ACA on small counties’ health behaviors. Once again, since we do observe changes in trends, it is important to understand what makes up health behavior. Health behavior is made up of tobacco use, diet and exercise, alcohol and drug use, and sexual activity. The changes in rank trends for large counties from worsening to improving suggest that for large counties, the ACA made Minnesotans more responsibly use substances, improve exercise, and have more responsible sexual activity. 
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Physical Environment Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Physical Environment Trends") +
+  labs(y = "Physical Environment Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    We now move on to physical environment trends. Thus far, this plot has the most differences between before and after the ACA. For large counties, all four have significant sign magnitude decreases, from sharply negative to approaching zero. This suggests that after the ACA, large counties stopped becoming worse in terms of their physical environments and became more constant, relative to other counties. Small counties also saw significant sign magnitude changes, with all four moving from sharply positive to approaching zero. This suggests that after the ACA, small counties stopped improving in terms of physical environment, relative to other counties. The most obvious implication of this visual is that for all counties, regardless of size, the ACA leveled the physical environment playing field by either allowing all counties to grow at the same rate, or stop growing altogether. Although we cannot tell what exactly is happening in this graph, we believe it is much more likely that counties are improving at very similar rates. At the same time, we observe sign changes for all counties. This strongly suggests that the ACA caused some new trends in different types of counties. For large counties, they stopped worsening relative to other counties and for small counties, they stopped improving relative to other counties. Once again, the next step is to look at what is driving the physical environment. In our analysis, the physical environment is made up of air and water quality housing and transit quality, and access. This suggests that the changes in rank trends for large counties mean that air/water quality and housing/transit level stopped getting worse relative to other counties and that for small counties these aspects stopped improving relative to other counties. One last conclusion is that air/water quality and housing/transit levels are now changing similarly in all types of counties.
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Social & Economic Factors Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Scocial & Economic Factors Trends") +
+  labs(y = "Social & Economic Factors Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    The last health factor determinant to look at is social and economic factors. Unlike the other plots, there are no significant trend changes for either large or small counties. This suggests that the ACA did not affect the relative ranking of counties in Minnesota. Things are trending in the same direction as before the ACA. Determinants that make up the social and economic factor index are education, employment, income, and family/social support. Our visual suggests that the ACA had no real effect on these qualities. In terms of what the ACA is, this conclusion is logical. These qualities are beyond the healthcare-focused scope of the ACA, so it makes sense that the healthcare-related legislation of the ACA did not affect these aspects. Furthermore, these are large, macro-level variables that often move at the national level and affect all areas relatively evenly, so it makes sense that we did not observe changes at the county level in Minnesota.
+
+    After looking at the four health factor determinants’ plots, there are several takeaways to pay attention to. First, large counties were affected more than small counties. We come to this conclusion because we observed significant trend changes for large counties in three of the four plots whereas small counties observed significant trend changes in one of four plots. Second, overall, it seems that the ACA benefited large counties. This is because in each of the three determinant charts that showed trend changes for large counties: clinical care, health behavior, and physical environment, each of the trends became more positive. Because we saw these positive changes in health factor determinants, it is safe to conclude that clinical care, health behavior, and physical environment are driving the change in overall health factors. Moving a step further, we can conclude that the same three determinants are driving the changes in health outcomes. To summarize, the ACA affected the counties of Minnesota, specifically large counties. We observe changes in health outcomes that are caused by improvements to clinical care, health behavior, and physical environment. 
+
+    Now that we know what is driving the change in health outcomes in general, we aim to understand what aspects of health outcomes are being affected. Recall that the health outcomes index is made up of an even split of the length of life (mortality) and quality of life (morbidity). So what within health outcomes is improving: mortality, morbidity, or both? To get to the bottom of this, we look at plots of mortality and morbidity before and after the ACA. Once again, these plots can be interpreted similarly to the plots above.
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Mortality Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Mortality Trends") +
+  labs(y = "Mortality Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    Looking first at morality, we do not see significant changes in slope for most countries. In fact, in seven out of eight counties, including all four large counties, the magnitude of slope stays very close to zero before and after the ACA. This tells us that the ACA did not affect the relative ranking of counties in terms of mortality. This means that the changes we observed in health outcomes by health factors do not show up in terms of mortality.
+
+```{r}
+ggplot(data = subrankings_subset, aes(x = Year, y = `Morbidity Rank`, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50, na.rm = TRUE) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE, na.rm = TRUE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    ),
+  breaks = c("Hennepin", "Ramsey", "Anoka", "Dakota", "Lake of the Woods", "Red Lake", "Kittson", "Big Stone")
+  ) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA - Morbidity Trends") +
+  labs(y = "Morbidity Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+    Next, looking at morbidity, we see some changes in trends. For each of the large counties and two of the small counties, we observe changes in signs of ranking trends before and after the ACA. For each of the large counties, we observe changes from a decreasing relative ranking before the ACA to an increasing one after. This means that for large counties, in terms of morbidity, the ACA caused them to improve more relative to other, smaller counties. These trends show us where the changes in health outcomes are coming from: quality of life. This means that the ACA affected the health factors of health behaviors, clinical care, and physical environment which in turn affected the health outcome of quality of life. 
+
+    Now, quality of life is a broad bucket to be improved, so it is important to understand what exactly makes up quality of life in this analysis. According to the County Health Rankings & Roadmaps website, quality of life contains eight subcategories: poor or fair health, poor physical health days, poor mental health days, low birth weight, frequent physical distress, frequent mental distress, diabetes prevalence, and HIV prevalence. This means that the ACA’s real-life improvements can be seen in these areas. All in all, the ACA affected the health factors of health behaviors, clinical care, and physical environment which in turn affected the health outcome of quality of life, more specifically improving general poor health, healthy births, mental and physical distress, diabetes prevalence, and HIV prevalence.
 
 ## Limitations and Next Steps
 
-    
+    The absence of county-level race information in the SAHIE data limited one of our initial analysis pathways, which would have been valuable for both the surface-level Shiny app and for more in-depth analysis. Cleaning and gathering the necessary data proved challenging, as experts involved in the project were also balancing other responsibilities. Moving forward, the next steps involve conducting a nationwide analysis, potentially grouping states geographically or politically. Additionally, we plan to perform a clustering analysis by state and run regressions to predict insurance rates, which will help gain deeper insights into the factors influencing insurance coverage. It would also be beneficial to increase the time frame in our analysis, as it would give us more years to look into. 
 
 ## Conclusion
-    
+
+    After our analysis, we concluded that the implementation of the Affordable Care Act (ACA) had a significant positive impact on healthcare access and overall quality of life, particularly in larger counties in Minnesota. These counties saw improvements in clinical care, health behaviors, and the physical environment, which in turn positively affected general health outcomes. The ACA's expansion of healthcare coverage also contributed to improved insurance rates across the state. However, we observed a slight increase in the number of uninsured people from 2015 to 2019, which may have been influenced by rising premiums within the ACA framework, along with actions taken by President Trump to undermine the law, such as reducing outreach and slashing subsidies to insurance companies. Our analysis also revealed that while large counties benefited more from the ACA, small counties did not experience the same level of improvement, highlighting the varying impact of the ACA based on county size. Moving forward, further exploration of nationwide trends and a deeper dive into state-level data will be crucial for understanding the broader effects of the ACA across different demographic and geographic groups.
 
 ## Works Cited
 
+"About the Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2024,     www.census.gov/programs-surveys/sahie/about.html.
+
+County Health Rankings & Roadmaps. Minnesota Health Data, 2024,     www.countyhealthrankings.org/health-data/minnesota?year=2024. Accessed 12 Dec. 2024.
+
+Katopodis, Tasos. A Sign in Support of the Affordable Care Act Is Seen in Front of the U.S. Capitol Building in     Washington, D.C., on March 20, 2022. Getty Images, 20 Mar. 2022.
+
+Lupia, Arthur. "Six Ways Trump Has Sabotaged the Affordable Care Act." Brookings, 13 Dec. 2019,     www.brookings.edu/articles/six-ways-trump-has-sabotaged-the-affordable-care-act/. Accessed 13 Dec. 2024.
+
+McNamee, Win. President Barack Obama Signs the Affordable Care Act During a Ceremony with Fellow Democrats in the     East Room of the White House on March 23, 2010 in Washington, D.C. Getty Images, 23 Mar. 2010.
+
+"The Share of Americans Without Health Insurance in 2023 Remained Low." Peter G. Peterson Foundation, 2024,     www.pgpf.org/article/the-share-of-americans-without-health-insurance-in-2023-remained-low/.
+
+U.S. Census Bureau. "Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2010-2019,     www.census.gov/data/tables/time-series/demo/health-insurance/sahie.html.
+
 ## Appendix
+
+    To recreate our Shiny App, please visit the `app.R` file. To recreate any visualizations, please visit the `County Indicators.RMD`. All relevant data is in the `\Data` folder and all relevant images used in the final paper is in the `\images` folder. The link for our Shiny app can be found [ here](https://jlposner.shinyapps.io/Projects_DS_Healthcare/). 

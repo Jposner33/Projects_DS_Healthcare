@@ -1,0 +1,147 @@
+---
+title: "SAHIE"
+author: "Evan Burns"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(tidyr)
+library(ggplot2)
+library(ggthemes)
+
+sahie <- read_csv("~/Desktop/Senior Year Work/Projects In Data Science/Evan Burns Final Project Work/Raw Data/Cliff_s SAHIE Data/Sahie_complete.csv") %>%
+  select(- `...1`) %>%
+  select(- `...20`) %>%
+  filter(geocat == 40) %>%
+  select(- countyfips) %>%
+  select(- county_name) %>%
+  select(- state_name) %>%
+  select(- version) %>%
+  select(- statefips) %>%
+  select(- geocat) %>%
+  filter(agecat == 1)
+
+sahie_long <- sahie %>%
+  pivot_longer(
+    cols = c(NIPR, NUI, NIC, PCTUI, PCTIC, PCTELIG, PCTLIIC),
+    names_to = "metric",
+    values_to = "value"
+  )
+
+sahie_race <- sahie %>%
+  filter(sexcat == 0) %>%
+  filter(iprcat == 0)
+
+sahie_income <- sahie %>%
+  filter(racecat == 0) %>%
+  filter(sexcat == 0)
+
+sahie_sex <- sahie %>%
+  filter(racecat == 0) %>%
+  filter(iprcat == 0)
+```
+
+```{r}
+#Race
+ggplot(data = sahie_race,aes(x = year, y = PCTLIIC, color = as.factor(racecat))) +
+  geom_point(size = 0.5) +
+  geom_smooth(aes(linetype = as.factor(racecat)), method = 'lm', se = FALSE, show.legend = FALSE) +
+  scale_color_manual(values = c(
+    "0" = "#440154FF",
+    "1" = "#287D8EFF",
+    "2" = "#73D055FF",
+    "3" = "#FDE725FF"
+  ),
+  labels = c("All Races", "White", "Black", "Hispanic")
+  ) +
+  scale_linetype_manual(values = c(
+    "0" = "solid",
+    "1" = "dashed",
+    "2" = "dashed",
+    "3" = "dashed"
+  ),
+  labels = c("All Races", "White", "Black", "Hispanic")
+  ) +
+  labs(color = "Race") +
+  labs(x = "Year") +
+  labs(y = "Percent Insured") +
+  labs(title = "Percent Insured In Minnesota - Race") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(
+    labels = scales::number_format(accuracy = 1)
+  )
+
+#Sex
+ggplot(data = sahie_sex,aes(x = year, y = PCTLIIC, color = as.factor(sexcat))) +
+  geom_point(size = 0.5) +
+  geom_smooth(aes(linetype = as.factor(sexcat)), method = 'lm', se = FALSE, show.legend = FALSE) +
+  scale_color_manual(values = c(
+    "0" = "#440154FF",
+    "1" = "#287D8EFF",
+    "2" = "#73D055FF"
+  ),
+  labels = c("All Sexes", "Male", "Female")
+  ) +
+  scale_linetype_manual(values = c(
+    "0" = "solid",
+    "1" = "dashed",
+    "2" = "dashed"
+  ),
+  labels = c("All Sexes", "Male", "Female")
+  ) +
+  labs(color = "Sex") +
+  labs(x = "Year") +
+  labs(y = "Percent Insured") +
+  labs(title = "Percent Insured In Minnesota - Sex") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(
+    labels = scales::number_format(accuracy = 1)
+  )
+
+#Income
+ggplot(data = sahie_income,aes(x = year, y = PCTLIIC, color = as.factor(iprcat))) +
+  geom_point(size = 0.5) +
+  geom_smooth(aes(linetype = as.factor(iprcat)), method = 'lm', se = FALSE, show.legend = FALSE) +
+  scale_color_manual(values = c(
+    "0" = "#440154FF",  
+    "1" = "#404788FF",    
+    "2" = "#287D8EFF",     
+    "3" = "#20A387FF",    
+    "4" = "#73D055FF",  
+    "5" = "#FDE725FF" 
+  ),
+  labels = c("All Income Levels", "At/Below 200% of Poverty", "At/Below 250% of Poverty", "At/Below 138% of Poverty", "At/Below 400% of Poverty", "Between 138% and 400% of Poverty")
+  ) +
+  scale_linetype_manual(values = c(
+    "0" = "solid",
+    "1" = "dashed",
+    "2" = "dashed",
+    "3" = "dashed",
+    "4" = "dashed",
+    "5" = "dashed"
+  ),
+  labels = c("All Income Levels", "At/Below 200% of Poverty", "At/Below 250% of Poverty", "At/Below 138% of Poverty", "At/Below 400% of Poverty", "Between 138% and 400% of Poverty")
+  ) +
+  labs(color = "Income Level") +
+  labs(x = "Year") +
+  labs(y = "Percent Insured") +
+  labs(title = "Percent Insured In Minnesota - Income") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(
+    labels = scales::number_format(accuracy = 1)
+  )
+```
+
+

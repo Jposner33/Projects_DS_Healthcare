@@ -1,0 +1,12 @@
+name: Projects_DS_Healthcare
+title: Projects_DS_Healthcare
+username: jlposner
+account: jlposner
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13595246
+bundleId: 9518238
+url: https://jlposner.shinyapps.io/Projects_DS_Healthcare/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
