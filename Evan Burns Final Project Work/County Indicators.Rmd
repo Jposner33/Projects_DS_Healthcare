@@ -76,6 +76,8 @@ hrho$County <- factor(hrho$County, levels = c(
   "Big Stone", "Kittson", "Lake of the Woods", "Red Lake"
 ))
 
+# Health Outcomes
+
 ggplot(data = hrho, aes(x = Year, y = HO_Rank, color = County, group = interaction(County, Period))) +
   geom_point(size = 0.50) +
   geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
@@ -105,6 +107,42 @@ ggplot(data = hrho, aes(x = Year, y = HO_Rank, color = County, group = interacti
   labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
   labs(title = "Before/After ACA Health Outcome Trends") +
   labs(y = "Health Outcomes Ranking") +
+  labs(x = "Year") +
+  theme_minimal() +
+  theme_tufte() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#Health Factors
+
+ggplot(data = hrho, aes(x = Year, y = HF_Rank, color = County, group = interaction(County, Period))) +
+  geom_point(size = 0.50) +
+  geom_vline(xintercept = 2014.5, linetype = 'dashed', color = 'black', size = 2) +
+  geom_smooth(aes(group = interaction(County,Period), linetype = County), method = 'lm', se = FALSE, show.legend = FALSE) +
+    scale_color_manual(values = c(
+    "Hennepin" = "#D73027",  # dark red
+    "Ramsey" = "#F46D43",    # medium red
+    "Anoka" = "#FDAE61",     # light red
+    "Dakota" = "#FEE08B",    # pale red
+    "Lake of the Woods" = "#4575B4",  # dark blue
+    "Red Lake" = "#91BFDB",           # medium blue
+    "Kittson" = "#74ADD1",            # light blue
+    "Big Stone" = "#313695"           # deep blue
+  )) +
+    scale_linetype_manual(values = c(
+    "Hennepin" = "solid",
+    "Ramsey" = "solid",
+    "Anoka" = "solid",
+    "Dakota" = "solid",
+    "Lake of the Woods" = "dashed",
+    "Red Lake" = "dashed",
+    "Kittson" = "dashed",
+    "Big Stone" = "dashed"
+    )) +
+  scale_y_reverse() +
+  guides(color = guide_legend(override.aes = list(size = 3))) +
+  labs(color = "Small counties have blue, dashed lines\nLarge counties have red, solid lines") +
+  labs(title = "Before/After ACA Health Factor Trends") +
+  labs(y = "Health Factor Ranking") +
   labs(x = "Year") +
   theme_minimal() +
   theme_tufte() +
