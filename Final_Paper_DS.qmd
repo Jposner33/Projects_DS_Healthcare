@@ -690,20 +690,20 @@ ggplot(data = subrankings_subset, aes(x = Year, y = `Morbidity Rank`, color = Co
 
 ## Works Cited
 
-"About the Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2024,     www.census.gov/programs-surveys/sahie/about.html.
+"About the Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2024, www.census.gov/programs-surveys/sahie/about.html.
 
-County Health Rankings & Roadmaps. Minnesota Health Data, 2024,     www.countyhealthrankings.org/health-data/minnesota?year=2024. Accessed 12 Dec. 2024.
+County Health Rankings & Roadmaps. Minnesota Health Data, 2024, www.countyhealthrankings.org/health-data/minnesota?year=2024. Accessed 12 Dec. 2024.
 
-Katopodis, Tasos. A Sign in Support of the Affordable Care Act Is Seen in Front of the U.S. Capitol Building in     Washington, D.C., on March 20, 2022. Getty Images, 20 Mar. 2022.
+Katopodis, Tasos. A Sign in Support of the Affordable Care Act Is Seen in Front of the U.S. Capitol Building in Washington, D.C., on March 20, 2022. Getty Images, 20 Mar. 2022.
 
-Lupia, Arthur. "Six Ways Trump Has Sabotaged the Affordable Care Act." Brookings, 13 Dec. 2019,     www.brookings.edu/articles/six-ways-trump-has-sabotaged-the-affordable-care-act/. Accessed 13 Dec. 2024.
+Lupia, Arthur. "Six Ways Trump Has Sabotaged the Affordable Care Act." Brookings, 13 Dec. 2019, www.brookings.edu/articles/six-ways-trump-has-sabotaged-the-affordable-care-act/. Accessed 13 Dec. 2024.
 
-McNamee, Win. President Barack Obama Signs the Affordable Care Act During a Ceremony with Fellow Democrats in the     East Room of the White House on March 23, 2010 in Washington, D.C. Getty Images, 23 Mar. 2010.
+McNamee, Win. President Barack Obama Signs the Affordable Care Act During a Ceremony with Fellow Democrats in the East Room of the White House on March 23, 2010 in Washington, D.C. Getty Images, 23 Mar. 2010.
 
-"The Share of Americans Without Health Insurance in 2023 Remained Low." Peter G. Peterson Foundation, 2024,     www.pgpf.org/article/the-share-of-americans-without-health-insurance-in-2023-remained-low/.
+"The Share of Americans Without Health Insurance in 2023 Remained Low." Peter G. Peterson Foundation, 2024, www.pgpf.org/article/the-share-of-americans-without-health-insurance-in-2023-remained-low/.
 
-U.S. Census Bureau. "Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2010-2019,     www.census.gov/data/tables/time-series/demo/health-insurance/sahie.html.
+U.S. Census Bureau. "Small Area Health Insurance Estimates (SAHIE) Program." U.S. Census Bureau, 2010-2019, www.census.gov/data/tables/time-series/demo/health-insurance/sahie.html.
 
 ## Appendix
 
-    To recreate our Shiny App, please visit the `app.R` file. To recreate any visualizations, please visit the `County Indicators.RMD`. All relevant data is in the `\Data` folder and all relevant images used in the final paper is in the `\images` folder. The link for our Shiny app can be found [ here](https://jlposner.shinyapps.io/Projects_DS_Healthcare/). 
+    To recreate our Shiny App, please visit the `app.R` file. To recreate any visualizations, please visit the `County Indicators.RMD`. All relevant data is in the `\Data` folder and all relevant images used in the final paper is in the `\images` folder. The link for our Shiny app can be found [here](https://jlposner.shinyapps.io/Projects_DS_Healthcare/). 
