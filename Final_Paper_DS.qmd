@@ -1,6 +1,6 @@
 ---
-title: "The Impact of the Affordable Care Act on Healthcare Access in Minnesota Counties"
-subtitle: "A County-Level Analysis of Changes in Coverage Before and After ACA Implementation"
+title: "The Impact of the Affordable Care Act on Healthcare Access in Minnesota"
+subtitle: "A County-Level Analysis Before and After ACA Implementation"
 authors: "Jacob Posner, Evan Burns, Max Clifford"
 date: "December 14, 2024"
 format: 
