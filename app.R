@@ -104,7 +104,7 @@ ui <- fluidPage(
       div(
         id = "placeholder_text",
         style = "border: 2px solid black; padding: 10px; border-radius: 5px;",
-        p("Select from the options to the side, to view insurance rates throughout Minnesota. Make sure that your years are chronologically
+        p("Select from the options to the side to view insurance rates throughout Minnesota. Make sure that your years are chronologically
             ordered, and also double check to make sure that you do not pick a variable that is not collected in said year. Once you have decided 
             what you would like to look at, see if you can find anything interesting!")
       )
