@@ -312,6 +312,8 @@ subrankings_subset <- subrankings_subset %>%
 
 ## Results and Analysis
 
+**Question 1**
+
     To answer the question, *How has access to healthcare varied across Minnesota’s counties before and after the implementation of the ACA?*, we created a Shiny App that allows users to interact with our data and come to conclusion. We analyzed the years 2010 to 2019 and will include screen shots from the Shiny App. 
 
 ![Uninsured Percentages in MN Counties from 2010 to 2019](images/uninsured2010-2019.png)
@@ -325,6 +327,8 @@ subrankings_subset <- subrankings_subset %>%
 ![Uninsured Percentages in MN Counties from 2013 to 2015](images/uninsured2015-2019.png)
 
     While the period from 2013 to 2015 saw a clear positive impact in reducing the number of uninsured individuals, there was a slight uptick in the uninsured rate afterward. This increase can partly be attributed to rising premiums within the ACA framework. However, the actions taken by President Trump during his tenure also played a significant role in this reversal. Throughout his presidency, he took several steps aimed at weakening the ACA. These included cutting funding for outreach and enrollment efforts, promoting waivers that allowed states to reduce ACA enrollment, undermining the regulatory framework of the law, and slashing subsidies to insurance companies offering coverage on the exchanges (Thomson, 2020). While we see a decrease of uninsured rates from 2010-2019, the addition of Trump's presidency decreased the effects of the Affordable Care Act when he stepped into office. 
+
+**Question 2**
 
     Digging deeper into our analysis, we aim to address the question, *What are the differences in before/after outcomes for large vs. small counties?* To answer this question, we are using the four largest and smallest counties in Minnesota with data. Please note that Traverse County, the smallest county in Minnesota, had no data so we used the next four smallest. The counties included in this analysis are Hennepin, Ramsey, Anoka, and Dakota (large) and Big Stone, Kittson, Lake of the Woods, and Red Lake (small). For reference, the locations of the counties can be found below. It is important to note that the four largest counties are located in the Twin Cities metropolitan area.
 

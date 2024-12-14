@@ -25,6 +25,6 @@ Load the data and run the Shiny app by opening app.R:
  - shiny::runApp("Shiny_App")
  - Ensure the SAHIE data files are located in the Data/ folder for correct app functionality.
 
-To reproduce specific vizualizations, please refer to the ___ .qmd
+To reproduce specific visualizations, please refer to the `County Indicators.Rmd`
 
 The project was completed in Macalester College's Projects in Data Science Capstone class by Evan Burns, Max Clifford, and Jacob Posner. 
